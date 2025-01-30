@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Comentarios from "./Comentarios";
 
 function Posts() {
 
@@ -69,6 +70,9 @@ function Posts() {
                     </div>
                 );
             })}
+
+            {/* Importamos y mostramos los comentarios debajo de los posts */}
+            <Comentarios />
         </div>
     );
 }
