@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"; 
 import Comentarios from "./Comentarios";
+import PerfilUsuario from "./PerfilUsuario"
 
 function Posts() {
-    
+
     // Estado para almacenar los posts
     const [posts, setPosts] = useState([]);
     
@@ -59,29 +61,35 @@ function Posts() {
     };
     
     return (
-        <div className="post-list">
-            {posts.map(post => {
-
-                // Buscamos el usuario correspondiente a este post según el userId
-                const user = users.find(user => user.id === post.userId);
-                
-                return (
-                    <div className="post" key={post.id}>
-                        <h1>{post.title}</h1>
-                        <p>{post.body}</p>
-                        {user && <p><strong>Posted by:</strong> {user.name}</p>}
-                        
-                        {/* Botón para mostrar/ocultar comentarios */}
-                        <button onClick={() => toggleComentarios(post.id)}>
-                            {comentariosVisibles[post.id] ? "Ocultar Comentarios" : "Mostrar Comentarios"}
-                        </button>
-                        
-                        {/* Mostrar comentarios si están visibles */}
-                        {comentariosVisibles[post.id] && <Comentarios postId={post.id} />}
+        <Router>
+            <Routes>
+                <Route path="/" element={
+                    <div className="post-list">
+                        {posts.map(post => {
+                            // Buscamos el usuario correspondiente a este post según el userId
+                            const user = users.find(user => user.id === post.userId);
+                            
+                            return (
+                                <div className="post" key={post.id}>
+                                    <h1>{post.title}</h1>
+                                    <p>{post.body}</p>
+                                    {user && <p><strong>Posted by:</strong> <Link to={`/perfil/${user.id}`}>{user.name}</Link></p>}
+                                    
+                                    {/* Botón para mostrar/ocultar comentarios */}
+                                    <button onClick={() => toggleComentarios(post.id)}>
+                                        {comentariosVisibles[post.id] ? "Ocultar Comentarios" : "Mostrar Comentarios"}
+                                    </button>
+                                    
+                                    {/* Mostrar comentarios si están visibles */}
+                                    {comentariosVisibles[post.id] && <Comentarios postId={post.id} />}
+                                </div>
+                            );
+                        })}
                     </div>
-                );
-            })}
-        </div>
+                } />
+                <Route path="/perfil/:id" element={<PerfilUsuario />} />
+            </Routes>
+        </Router>
     );
 }
 
